@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>wangyouA 的个人小站</title>
+    <style>
+        /* 核心颜色变量：默认浅色模式 */
+        :root {
+            --bg-color: #f8fafc; --dot-color: #e2e8f0; --text-main: #333333;
+            --text-sub: #475569; --text-light: #94a3b8; --card-bg: #ffffff;
+            --card-border: #f1f5f9; --box-bg: #f8fafc; --box-border: #e2e8f0;
+            --shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+        /* 深色模式变量 */
+        [data-theme="dark"] {
+            --bg-color: #0f172a; --dot-color: #1e293b; --text-main: #e2e8f0;
+            --text-sub: #cbd5e1; --text-light: #64748b; --card-bg: #1e293b;
+            --card-border: #334155; --box-bg: #0f172a; --box-border: #334155;
+            --shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color); color: var(--text-main); padding: 20px;
+            background-image: radial-gradient(var(--dot-color) 1px, transparent 1px);
+            background-size: 20px 20px; transition: background-color 0.3s;
+        }
+        .container { max-width: 600px; margin: 0 auto; }
+
+        /* 顶部悬浮控制区 */
+        .top-controls { position: fixed; top: 20px; right: 20px; display: flex; gap: 10px; z-index: 1000; }
+        .control-btn {
+            height: 40px; padding: 0 15px; background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: 20px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.1); font-size: 0.85rem;
+            font-weight: bold; color: var(--text-main); transition: all 0.3s;
+        }
+        .control-btn:hover { transform: translateY(-2px); }
+        .theme-btn { width: 40px; padding: 0; border-radius: 50%; font-size: 1.2rem; }
+
+        /* 注册/登录弹窗 */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center;
+            align-items: center; backdrop-filter: blur(3px);
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-box {
+            background: var(--card-bg); width: 90%; max-width: 350px; padding: 30px 20px;
+            border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 1px solid var(--card-border); position: relative;
+        }
+        .close-modal { position: absolute; top: 15px; right: 15px; cursor: pointer; font-size: 1.2rem; color: var(--text-light); }
+        .modal-box h2 { font-size: 1.4rem; margin-bottom: 20px; color: var(--text-main); }
+        .input-group { position: relative; margin-bottom: 15px; }
+        .modal-input {
+            width: 100%; padding: 12px; padding-right: 40px; background: var(--box-bg);
+            border: 1px solid var(--box-border); border-radius: 8px; color: var(--text-main);
+            outline: none; font-size: 0.95rem;
+        }
+        .modal-input:focus { border-color: #3b82f6; }
+        .eye-icon { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-light); font-size: 1.1rem; user-select: none; }
+        .modal-submit {
+            width: 100%; padding: 12px; border: none; border-radius: 8px; background: #3b82f6;
+            color: white; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.2s; margin-top: 5px;
+        }
+        .modal-submit:hover { background: #2563eb; }
+        .modal-hint { font-size: 0.75rem; color: var(--text-light); margin-top: 15px; line-height: 1.5; }
+
+        /* 注册后的欢迎语 */
+        .user-greeting {
+            display: none; color: #3b82f6; font-weight: bold; font-size: 0.95rem; 
+            margin-bottom: 10px; background: rgba(59, 130, 246, 0.1); 
+            padding: 5px 15px; border-radius: 20px; display: inline-block; margin-top: 5px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        /* 以下为原有排版 */
+        .minor-warning { background: var(--card-bg); color: #ef4444; border: 2px solid #fecaca; padding: 15px; border-radius: 12px; text-align: center; font-size: 0.95rem; line-height: 1.6; margin-bottom: 25px; box-shadow: var(--shadow); margin-top: 40px; }
+        [data-theme="dark"] .minor-warning { border-color: #7f1d1d; background: rgba(239, 68, 68, 0.1); }
+        .minor-warning strong { display: block; font-size: 1.05rem; margin-bottom: 5px; color: #dc2626; }
+        .brand-header { text-align: center; margin: 20px 0 20px; }
+        .brand-header h1 { font-size: 3rem; font-weight: 900; color: var(--text-main); letter-spacing: 2px; margin-bottom: 10px; }
+        .welcome-box { margin-bottom: 15px; }
+        .welcome-box p { color: var(--text-sub); font-size: 1rem; margin-bottom: 5px; }
+        .welcome-box .blessing { color: #d97706; font-weight: bold; font-size: 1.1rem; margin-top: 10px; display: inline-block; background: rgba(217, 119, 6, 0.1); padding: 4px 16px; border-radius: 20px; }
+        .datetime-display { display: inline-block; background: var(--box-bg); color: var(--text-light); padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; font-family: monospace; margin-top: 15px; margin-bottom: 20px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
+        .social-links { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
+        .social-btn { display: inline-flex; align-items: center; justify-content: center; padding: 10px 15px; border-radius: 12px; text-decoration: none; font-size: 0.85rem; font-weight: bold; color: white; transition: all 0.2s; }
+        .social-btn:hover { transform: translateY(-2px); opacity: 0.9; }
+        .social-xhs { background: #ff2442; } .social-bili { background: #00a1d6; } .social-wx { background: #f59e0b; }
+        .milestone-link-btn { display: block; background: linear-gradient(90deg, #f59e0b, #ef4444); color: white; text-align: center; padding: 15px; border-radius: 16px; text-decoration: none; font-weight: bold; font-size: 1.05rem; margin-bottom: 25px; box-shadow: 0 6px 15px rgba(239, 68, 68, 0.2); transition: 0.3s; }
+        .xiaohongshu-card { background: var(--card-bg); border: 2px dashed #fda4af; border-radius: 16px; padding: 20px; margin-bottom: 25px; }
+        [data-theme="dark"] .xiaohongshu-card { border-color: #9f1239; }
+        .xiaohongshu-card h3 { font-size: 1.1rem; font-weight: bold; margin-bottom: 10px; color: #e11d48; }
+        .xiaohongshu-card p { font-size: 0.9rem; color: var(--text-sub); margin-bottom: 10px; }
+        .link-box { background: var(--box-bg); padding: 12px; border-radius: 8px; font-size: 0.85rem; color: var(--text-main); word-break: break-all; border: 1px solid var(--box-border); margin-bottom: 10px; user-select: all; }
+        .expire-tip { font-size: 0.8rem; color: #be123c; background: rgba(225, 29, 72, 0.1); padding: 8px; border-radius: 6px; margin-bottom: 15px; }
+        .episode-links { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; border-top: 1px dashed #fda4af; padding-top: 15px; }
+        .episode-btn { display: block; text-align: center; padding: 12px; border-radius: 8px; text-decoration: none; font-size: 0.9rem; font-weight: bold; transition: 0.2s; }
+        .btn-xhs { background: #ff2442; color: white; } .btn-bili { background: #00a1d6; color: white; }
+        .hero-donate { display: block; background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); border: 2px solid #fdba74; border-radius: 24px; padding: 30px 20px; text-align: center; text-decoration: none; margin-bottom: 25px; box-shadow: var(--shadow); transition: all 0.3s ease; }
+        [data-theme="dark"] .hero-donate { background: linear-gradient(135deg, #431407 0%, #7c2d12 100%); border-color: #9a3412; }
+        .hero-donate .heart-icon { font-size: 2.5rem; display: block; margin-bottom: 10px; }
+        .hero-donate h2 { font-size: 1.5rem; color: #ea580c; margin-bottom: 10px; }
+        .hero-donate p { font-size: 0.95rem; color: var(--text-sub); line-height: 1.5; max-width: 85%; margin: 0 auto; }
+        [data-theme="dark"] .hero-donate p { color: #fdba74; }
+        .hero-donate .tag { display: inline-block; margin-top: 15px; background: rgba(0,0,0,0.05); padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; color: #c2410c; font-weight: bold; }
+        [data-theme="dark"] .hero-donate .tag { background: rgba(255,255,255,0.1); color: #fdba74; }
+        .card-block { background: var(--card-bg); border-radius: 16px; padding: 20px; margin-bottom: 25px; box-shadow: var(--shadow); border: 1px solid var(--card-border); }
+        .card-title { font-size: 1rem; font-weight: bold; color: var(--text-sub); margin-bottom: 15px; display: flex; align-items: center; gap: 6px; }
+        .yt-link-item { display: block; background: var(--box-bg); border: 1px solid var(--box-border); padding: 12px 15px; border-radius: 10px; text-decoration: none; color: var(--text-main); margin-bottom: 10px; transition: all 0.2s; }
+        .yt-link-item:hover { background: var(--card-bg); border-color: #3b82f6; color: #3b82f6; }
+        .yt-name { font-weight: bold; font-size: 0.95rem; margin-bottom: 4px; }
+        .yt-url { font-size: 0.75rem; color: var(--text-light); word-break: break-all; }
+        details.corner-shop { background: var(--card-bg); border-radius: 16px; box-shadow: var(--shadow); border: 1px solid var(--card-border); overflow: hidden; margin-bottom: 20px; }
+        details.corner-shop summary { padding: 18px 20px; font-size: 1rem; font-weight: bold; color: var(--text-sub); cursor: pointer; list-style: none; display: flex; justify-content: space-between; }
+        details.corner-shop summary::-webkit-details-marker { display: none; }
+        details.corner-shop summary::after { content: "▼ 展开"; font-size: 0.8rem; color: var(--text-light); }
+        details[open].corner-shop summary::after { content: "▲ 收起"; }
+        details[open].corner-shop summary { border-bottom: 1px dashed var(--box-border); }
+        .shop-content { padding: 0 20px 10px 20px; }
+        .mini-product { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed var(--box-border); }
+        .mini-product:last-child { border-bottom: none; padding-bottom: 0; }
+        .mini-info { display: flex; align-items: center; gap: 12px; }
+        .mini-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem; flex-shrink: 0; }
+        .bg-google { background: #e8f0fe; color: #1a73e8; } .bg-ins { background: #fce7f3; color: #db2777; } .bg-reddit { background: #ffedd5; color: #ea580c; } .bg-spotify { background: #dcfce7; color: #16a34a; } .bg-tg { background: #e0f2fe; color: #0ea5e9; }
+        [data-theme="dark"] .mini-icon { background: rgba(255,255,255,0.1); }
+        .mini-name { font-size: 0.95rem; font-weight: 500; color: var(--text-main); margin-bottom: 2px; }
+        .stock-out { font-size: 0.7rem; color: #ef4444; background: rgba(239, 68, 68, 0.1); padding: 1px 6px; border-radius: 4px; display: inline-block; }
+        .mini-price { font-size: 1rem; font-weight: bold; color: var(--text-light); text-decoration: line-through; margin-right: 10px;}
+        .mini-soldout { background: var(--box-bg); color: var(--text-light); padding: 6px 14px; border-radius: 6px; font-size: 0.85rem; font-weight: bold; cursor: not-allowed; }
+        .copyright-notice { margin-top: 30px; padding: 15px; background: var(--card-bg); border-radius: 10px; border: 1px solid var(--box-border); font-size: 0.75rem; color: var(--text-light); line-height: 1.6; text-align: justify; }
+        .copyright-notice strong { color: var(--text-sub); }
+        .simple-copyright { text-align: center; margin: 30px 0; font-size: 0.8rem; color: var(--text-light); }
+        .simple-copyright span { margin: 0 8px; color: var(--box-border); }
+    </style>
+</head>
+<body>
+
+<!-- 顶部控制区 -->
+<div class="top-controls">
+    <div class="control-btn" id="authBtn" onclick="handleAuthClick()">登录 / 注册</div>
+    <div class="control-btn theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</div>
+</div>
+
+<!-- 注册/登录弹窗 -->
+<div class="modal-overlay" id="authModal">
+    <div class="modal-box">
+        <div class="close-modal" onclick="closeModal()">✕</div>
+        <h2 id="modalTitle">登录 / 注册</h2>
+        
+        <div class="input-group">
+            <input type="text" class="modal-input" id="usernameInput" placeholder="输入你的昵称">
+        </div>
+        
+        <div class="input-group">
+            <input type="password" class="modal-input" id="passwordInput" placeholder="设置/输入密码">
+            <span class="eye-icon" onclick="togglePassword()">👁️</span>
+        </div>
+        
+        <button class="modal-submit" onclick="submitAuth()">确认</button>
+        <p class="modal-hint">本地轻量级注册，如果你换了手机或者清理了缓存，账号可能会丢失。</p>
+    </div>
+</div>
+
+<div class="container">
+    <!-- 顶部警告 -->
+    <div class="minor-warning">
+        <strong>⚠️ 未成年人禁止购买和赞助</strong>
+        我方概不负责 · 禁止退款 · 要求已经明确
+    </div>
+    
+    <!-- 名字与欢迎语 -->
+    <div class="brand-header">
+        <h1>wangyouA</h1>
+        <div class="welcome-box">
+            <p>感谢您来到我的网站</p>
+            <div class="user-greeting" id="userGreeting"></div>
+            <br>
+            <span class="blessing">祝您天天开心，万事顺意 ✨</span>
+        </div>
+
+        <div class="datetime-display" id="clock">加载时间中...</div>
+
+        <div class="social-links">
+            <a href="https://xhslink.cn/o/52CxhoNQFrZ" class="social-btn social-xhs" target="_blank">📕 小红书主页</a>
+            <a href="https://b23.tv/qUYciok" class="social-btn social-bili" target="_blank">📺 Bilibili主页</a>
+            <div class="social-btn social-wx" onclick="copyWxId()" style="cursor: pointer;">📱 视频号: sphed...</div>
+        </div>
+    </div>
+
+    <!-- 群聊卡片 -->
+    <div class="xiaohongshu-card">
+        <h3>📺 想了解更多 ST 预告和剧集？</h3>
+        <p>欢迎加入我的小红书群聊，一起讨论交流！<br><b>我的账号也会及时发布 ST 消息预告剧集的。</b></p>
+        
+        <div class="link-box">
+            3【复制口令，启动小红书】 "skibidi toilet 群"创意集结地, 12月5日期间开放 CA1707 :/#i🥑🍌😂🍋🍏🥕🦊😚😁🍪🍔🥒
+        </div>
+        <div class="expire-tip">
+            💡 如果口令过期了，可在小红书搜索我的账号 <span style="color:#e11d48; font-weight:bold;">94147385890</span>，点击群聊找到“skibidi toilet 群”哦。
+        </div>
+
+        <div class="episode-links">
+            <a href="https://xhslink.cn/o/9b82gi2LMx5" class="episode-btn btn-xhs" target="_blank">📕 83集翻译 (小红书)</a>
+            <a href="https://b23.tv/GZu1Fxa" class="episode-btn btn-bili" target="_blank">📺 83集翻译 (Bilibili)</a>
+            <a href="https://www.xiaohongshu.com/collection/item/6a7e878c0608000000000001?xhsshare=&appuid=6707cdd5000000001d022219&apptime=1794144475&share_id=18a97ddeb4f74ae48929db556c7df34b&share_channel=copy_link" class="episode-btn btn-xhs" target="_blank">📕 XHS ST 剧集合集</a>
+            <a href="https://www.xiaohongshu.com/collection/item/6af075611bbc000000000001?xhsshare=&appuid=6707cdd5000000001d022219&apptime=1794144537&share_id=41f7c35060374318aba0406eb9e584d7&share_channel=copy_link" class="episode-btn btn-xhs" target="_blank">📕 阿莱斯恶魔 (小红书)</a>
+            <a href="https://b23.tv/HJpCkez" class="episode-btn btn-bili" target="_blank">📺 阿莱斯恶魔第二季 (Bilibili)</a>
+            <a href="https://www.xiaohongshu.com/collection/item/6a7e886d05f2000000000001?xhsshare=&appuid=6707cdd5000000001d022219&apptime=1794144882&share_id=7cfc70cbb7474790bcda8a4379fb611d&share_channel=copy_link" class="episode-btn btn-xhs" target="_blank">📕 原作/伪原作预告合集 (小红书)</a>
+        </div>
+    </div>
+
+    <!-- 里程碑跳转 -->
+    <a href="milestones.html" class="milestone-link-btn">🏆 查看我的里程碑数据 (粉丝/播放量) ➔</a>
+
+    <!-- 捐赠卡片 -->
+    <a href="donate.html" class="hero-donate">
+        <span class="heart-icon">💖</span>
+        <h2>赞助与支持</h2>
+        <p>网站运营不易，如果您喜欢这里，欢迎请我喝杯奶茶（最高支持 3.88 元）。</p>
+        <span class="tag">全凭心意 · 感谢有您</span>
+    </a>
+
+    <!-- 相关账号推荐 -->
+    <div class="card-block">
+        <div class="card-title">🔗 相关账号推荐</div>
+        <a href="https://youtube.com/@skibidi?si=ImEEMMU9YlNXjfXp" class="yt-link-item" target="_blank">
+            <div class="yt-name">▶️ inviz 账号</div>
+            <div class="yt-url">https://youtube.com/@skibidi</div>
+        </a>
+        <a href="https://youtube.com/@doorcloser?si=w3z2nwW1wOXCMTga" class="yt-link-item" target="_blank">
+            <div class="yt-name">▶️ doorcloser (boom小号)</div>
+            <div class="yt-url">https://youtube.com/@doorcloser</div>
+        </a>
+        <a href="https://youtube.com/@meleeluigi12?si=46ZnX-IHyHXStpQJ" class="yt-link-item" target="_blank">
+            <div class="yt-name">▶️ 声波宇宙</div>
+            <div class="yt-url">https://youtube.com/@meleeluigi12</div>
+        </a>
+    </div>
+
+    <!-- 账号小铺 -->
+    <details class="corner-shop">
+        <summary>🛒 账号小铺 (点击展开)</summary>
+        <div class="shop-content">
+            <div class="mini-product">
+                <div class="mini-info"><div class="mini-icon bg-google">G</div><div><div class="mini-name">Google 账号</div><div class="stock-out">暂无库存</div></div></div>
+                <div class="mini-action"><div class="mini-price">¥ 5</div><span class="mini-soldout">暂无库存</span></div>
+            </div>
+            <div class="mini-product">
+                <div class="mini-info"><div class="mini-icon bg-ins">Ins</div><div><div class="mini-name">Instagram 账号</div><div class="stock-out">暂无库存</div></div></div>
+                <div class="mini-action"><div class="mini-price">¥ 4.5</div><span class="mini-soldout">暂无库存</span></div>
+            </div>
+            <div class="mini-product">
+                <div class="mini-info"><div class="mini-icon bg-reddit">R</div><div><div class="mini-name">Reddit 账号</div><div class="stock-out">暂无库存</div></div></div>
+                <div class="mini-action"><div class="mini-price">¥ 2</div><span class="mini-soldout">暂无库存</span></div>
+            </div>
+            <div class="mini-product">
+                <div class="mini-info"><div class="mini-icon bg-spotify">S</div><div><div class="mini-name">声破天 账号</div><div class="stock-out">暂无库存</div></div></div>
+                <div class="mini-action"><div class="mini-price">¥ 0.9</div><span class="mini-soldout">暂无库存</span></div>
+            </div>
+            <div class="mini-product">
+                <div class="mini-info"><div class="mini-icon bg-tg">TG</div><div><div class="mini-name">TG 注册账号</div><div class="stock-out">暂无库存</div></div></div>
+                <div class="mini-action"><div class="mini-price">¥ 8</div><span class="mini-soldout">暂无库存</span></div>
+            </div>
+        </div>
+    </details>
+
+    <!-- 免责声明 -->
+    <div class="copyright-notice">
+        <strong>免责声明：</strong><br>
+        本站为个人兴趣建立的 ST 资讯导航与翻译分享站，与 Invisible Narratives 及 YouTube 官方无任何隶属关系。站内引用的所有原视频版权均归原作者（DaFuq!?Boom!）所有。本站所提供的翻译内容仅供粉丝交流学习，禁止商用翻译作品。
+    </div>
+
+    <div class="simple-copyright">
+        © 2026 wangyouA <span>·</span> Powered by Liquid Glass
+    </div>
+</div>
+
+<script>
+    // ================= 极简本地注册系统 (去除 ID 版) =================
+    const authBtn = document.getElementById('authBtn');
+    const authModal = document.getElementById('authModal');
+    const userGreeting = document.getElementById('userGreeting');
+    const usernameInput = document.getElementById('usernameInput');
+    const passwordInput = document.getElementById('passwordInput');
+
+    // 获取本地存的所有用户数据
+    function getUsers() {
+        return JSON.parse(localStorage.getItem('site_users_list') || '{}');
+    }
+
+    // 检查登录状态
+    function checkUser() {
+        const currentUser = localStorage.getItem('current_user');
+        if (currentUser) {
+            authBtn.innerText = "退出登录";
+            userGreeting.style.display = 'inline-block';
+            userGreeting.innerHTML = `你好，<b>${currentUser}</b>！`;
+        } else {
+            authBtn.innerText = "登录 / 注册";
+            userGreeting.style.display = 'none';
+        }
+    }
+
+    function handleAuthClick() {
+        const currentUser = localStorage.getItem('current_user');
+        if (currentUser) {
+            if (confirm("你确定要退出当前账号吗？")) {
+                localStorage.removeItem('current_user');
+                checkUser();
+            }
+        } else {
+            authModal.classList.add('active');
+            usernameInput.value = '';
+            passwordInput.value = '';
+            usernameInput.focus();
+        }
+    }
+
+    function closeModal() { authModal.classList.remove('active'); }
+    
+    function togglePassword() {
+        passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+    }
+
+    function submitAuth() {
+        const name = usernameInput.value.trim();
+        const pass = passwordInput.value.trim();
+        
+        if (!name || !pass) { alert("昵称和密码不能为空！"); return; }
+
+        const users = getUsers();
+
+        // 如果名字已存在，验证密码
+        if (users[name]) {
+            if (users[name].password === pass) {
+                localStorage.setItem('current_user', name);
+                alert("欢迎回来，" + name + "！");
+                closeModal();
+                checkUser();
+            } else {
+                alert("密码错误！");
+            }
+        } else {
+            // 如果名字不存在，直接注册
+            users[name] = {
+                password: pass
+            };
+            localStorage.setItem('site_users_list', JSON.stringify(users));
+            
+            localStorage.setItem('current_user', name);
+            alert(`注册成功！欢迎你，${name}！`);
+            closeModal();
+            checkUser();
+        }
+    }
+
+    checkUser();
+
+    // ================= 其他页面功能 =================
+    function updateClock() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const weekdays = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+        const weekday = weekdays[now.getDay()];
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        document.getElementById('clock').innerText = `${year}-${month}-${day} ${weekday} ${hours}:${minutes}:${seconds}`;
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    function copyWxId() {
+        const wxId = "sphedX45W2FbH1r";
+        let tempInput = document.createElement("input");
+        tempInput.value = wxId;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempInput);
+        alert("微信视频号 ID 已复制：" + wxId + "\n请打开微信搜索并关注！");
+    }
+
+    const themeBtn = document.getElementById('themeBtn');
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    
+    if (currentTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeBtn.innerText = '☀️';
+    }
+
+    function toggleTheme() {
+        let theme = document.documentElement.getAttribute('data-theme');
+        if (theme === 'dark') {
+            document.documentElement.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'light');
+            themeBtn.innerText = '🌙';
+        } else {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+            themeBtn.innerText = '☀️';
+        }
+    }
+</script>
+</body>
+</html>
