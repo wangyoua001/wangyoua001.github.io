@@ -5,52 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>感谢您的支持</title>
     <style>
-        /* 核心颜色变量：默认浅色模式 */
+        /* 核心颜色变量 */
         :root {
-            --bg-color: #fffaf0;
-            --text-main: #4a5568;
-            --card-bg: #ffffff;
-            --card-border: #fef3c7;
-            --btn-bg: #f8fafc;
-            --btn-border: #e2e8f0;
-            --btn-text: #ea580c;
-            --disabled-bg: #f1f5f9;
-            --disabled-text: #cbd5e1;
+            --bg-color: #fffaf0; --text-main: #4a5568; --card-bg: #ffffff;
+            --card-border: #fef3c7; --btn-bg: #f8fafc; --btn-border: #e2e8f0;
+            --btn-text: #ea580c; --disabled-bg: #f1f5f9; --disabled-text: #cbd5e1;
+            --input-bg: #f8fafc; --input-border: #cbd5e1;
         }
-
-        /* 深色模式变量 */
         [data-theme="dark"] {
-            --bg-color: #0f172a;
-            --text-main: #e2e8f0;
-            --card-bg: #1e293b;
-            --card-border: #334155;
-            --btn-bg: #0f172a;
-            --btn-border: #334155;
-            --btn-text: #f97316;
-            --disabled-bg: #1e293b;
-            --disabled-text: #475569;
+            --bg-color: #0f172a; --text-main: #e2e8f0; --card-bg: #1e293b;
+            --card-border: #334155; --btn-bg: #0f172a; --btn-border: #334155;
+            --btn-text: #f97316; --disabled-bg: #1e293b; --disabled-text: #475569;
+            --input-bg: #0f172a; --input-border: #475569;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color); 
-            display: flex; justify-content: center; align-items: center;
-            min-height: 100vh; padding: 20px; color: var(--text-main);
-            transition: background-color 0.3s, color 0.3s;
+            background-color: var(--bg-color); display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; padding: 20px; color: var(--text-main); transition: background-color 0.3s;
         }
 
-        /* 深色模式切换按钮 */
         .theme-toggle {
-            position: fixed;
-            top: 20px; right: 20px;
-            width: 45px; height: 45px;
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            font-size: 1.2rem; z-index: 1000; transition: all 0.3s;
+            position: fixed; top: 20px; right: 20px; width: 45px; height: 45px;
+            background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); font-size: 1.2rem; z-index: 1000; transition: all 0.3s;
         }
         .theme-toggle:hover { transform: scale(1.1); }
 
@@ -63,67 +43,123 @@
         }
         .heart-icon { font-size: 4rem; color: #ef4444; margin-bottom: 15px; }
         h1 { font-size: 1.6rem; color: #d97706; margin-bottom: 10px; }
-        .desc { line-height: 1.6; margin-bottom: 30px; color: var(--text-main); font-size: 0.95rem; opacity: 0.8; }
+        .desc { line-height: 1.6; margin-bottom: 25px; color: var(--text-main); font-size: 0.95rem; opacity: 0.8; }
         
-        .amount-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 30px; }
+        /* 自定义金额输入区 */
+        .custom-amount-box {
+            background: var(--input-bg); border: 2px solid var(--input-border);
+            border-radius: 16px; padding: 20px; margin-bottom: 25px;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .currency-symbol { font-size: 2rem; font-weight: bold; color: var(--btn-text); }
+        .custom-input {
+            background: transparent; border: none; outline: none;
+            font-size: 2.5rem; font-weight: 900; color: var(--text-main);
+            width: 150px; text-align: center;
+        }
+        /* 隐藏 number 输入框的上下箭头 */
+        .custom-input::-webkit-outer-spin-button,
+        .custom-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         
-        /* 可点击的金额按钮 */
+        .limit-tip { font-size: 0.8rem; color: var(--text-main); opacity: 0.6; margin-top: -15px; margin-bottom: 20px; }
+
+        /* 快捷金额按钮网格 */
+        .amount-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 25px; }
         .amount-btn {
             background: var(--btn-bg); border: 1px solid var(--btn-border); padding: 12px 5px;
-            border-radius: 10px; font-size: 1.05rem; font-weight: bold;
-            color: var(--btn-text); text-decoration: none; display: flex; align-items: center; justify-content: center;
-            transition: all 0.2s;
+            border-radius: 10px; font-size: 1rem; font-weight: bold;
+            color: var(--btn-text); cursor: pointer; transition: all 0.2s;
         }
         .amount-btn:hover { background: var(--card-bg); border-color: #f97316; transform: translateY(-2px); }
 
-        /* 不可点击的灰色按钮 */
-        .amount-btn.disabled {
-            background: var(--disabled-bg); border-color: var(--disabled-bg);
-            color: var(--disabled-text); cursor: not-allowed; text-decoration: line-through;
+        /* 确认捐赠按钮 */
+        .submit-donate-btn {
+            display: block; width: 100%; padding: 15px;
+            background: #10b981; color: white; text-decoration: none;
+            border-radius: 12px; font-size: 1.1rem; font-weight: bold;
+            transition: 0.2s; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
         }
-        .amount-btn.disabled:hover { transform: none; background: var(--disabled-bg); }
+        .submit-donate-btn:hover { background: #059669; transform: translateY(-2px); }
 
-        .back-link { color: var(--text-main); opacity: 0.5; text-decoration: none; font-size: 0.9rem; }
+        .back-link { display: inline-block; margin-top: 20px; color: var(--text-main); opacity: 0.5; text-decoration: none; font-size: 0.9rem; }
         .back-link:hover { opacity: 1; }
         
-        @media (max-width: 400px) { .amount-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 400px) { 
+            .amount-grid { grid-template-columns: repeat(2, 1fr); } 
+            .custom-input { font-size: 2rem; width: 120px; }
+        }
     </style>
 </head>
 <body>
 
-<!-- 深色模式切换悬浮按钮 -->
 <div class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</div>
 
 <div class="donate-card">
     <div class="heart-icon">❤️</div>
     <h1>请好心人赞助一下</h1>
-    <p class="desc">服务器和账号维护不易，如果您觉得本站有帮助，可以请我喝杯奶茶吗？（最高支持 3.88 元）</p>
+    <p class="desc">服务器和账号维护不易，如果您觉得本站有帮助，可以请我喝杯奶茶吗？</p>
     
-    <div class="amount-grid">
-        <!-- 可以点击的金额（最高到 3.88） -->
-        <a href="pay.html?type=donate&amount=0.11" class="amount-btn">¥ 0.11</a>
-        <a href="pay.html?type=donate&amount=0.88" class="amount-btn">¥ 0.88</a>
-         <a href="pay.html?type=donate&amount=1.88" class="amount-btn">¥ 1.88</a>
-        <a href="pay.html?type=donate&amount=2.88" class="amount-btn">¥ 2.88</a>
-        <a href="pay.html?type=donate&amount=3.88" class="amount-btn">¥ 3.88</a>
-        
-        <!-- 3.88 以上的全部变成灰色不可点击 -->
-        <span class="amount-btn disabled">¥ 5.88</span>
-        <span class="amount-btn disabled">¥ 6.88</span>
-        <span class="amount-btn disabled">¥ 8.88</span>
-        <span class="amount-btn disabled">¥ 18.88</span>
-        <span class="amount-btn disabled">¥ 36.88</span>
-        <span class="amount-btn disabled">¥ 49.99</span>
-        <span class="amount-btn disabled">¥ 66.66</span>
-        <span class="amount-btn disabled">¥ 88.88</span>
-        <span class="amount-btn disabled">¥ 99.99</span>
+    <!-- 自定义金额输入框 -->
+    <div class="custom-amount-box">
+        <span class="currency-symbol">¥</span>
+        <input type="number" id="donateAmount" class="custom-input" value="3.88" step="0.01" min="0.01" max="5">
     </div>
+    <div class="limit-tip">⚠️ 最高限额 5 元</div>
+
+    <!-- 快捷金额按钮 -->
+    <div class="amount-grid">
+        <button onclick="setAmount(0.11)" class="amount-btn">¥ 0.11</button>
+        <button onclick="setAmount(0.88)" class="amount-btn">¥ 0.88</button>
+        <button onclick="setAmount(1.88)" class="amount-btn">¥ 1.88</button>
+        <button onclick="setAmount(2.88)" class="amount-btn">¥ 2.88</button>
+        <button onclick="setAmount(3.88)" class="amount-btn">¥ 3.88</button>
+    </div>
+
+    <!-- 确认按钮 -->
+    <a href="#" id="submitBtn" class="submit-donate-btn">确认捐赠</a>
     
+    <br>
     <a href="index.html" class="back-link">← 返回首页</a>
 </div>
 
 <script>
-    // 主题初始化：读取本地存储
+    const amountInput = document.getElementById('donateAmount');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // 快捷按钮点击事件
+    function setAmount(val) {
+        amountInput.value = val;
+    }
+
+    // 监听输入框变化，防止超过 5 元或为负数
+    amountInput.addEventListener('input', function() {
+        let val = parseFloat(this.value);
+        if (val > 5) {
+            this.value = 5;
+            alert("最高只能赞助 5 元哦，感谢您的慷慨！");
+        } else if (val < 0) {
+            this.value = 0.01;
+        }
+    });
+
+    // 点击确认捐赠按钮
+    submitBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        let finalAmount = parseFloat(amountInput.value);
+        
+        if (isNaN(finalAmount) || finalAmount <= 0) {
+            alert("请输入正确的捐赠金额！");
+            return;
+        }
+        if (finalAmount > 5) {
+            finalAmount = 5;
+        }
+
+        // 跳转到支付页，带上金额参数
+        window.location.href = `pay.html?type=donate&amount=${finalAmount}`;
+    });
+
+    // 深色模式逻辑
     const themeBtn = document.getElementById('themeBtn');
     const currentTheme = localStorage.getItem('theme') || 'light';
     
@@ -132,7 +168,6 @@
         themeBtn.innerText = '☀️';
     }
 
-    // 切换主题逻辑
     function toggleTheme() {
         let theme = document.documentElement.getAttribute('data-theme');
         if (theme === 'dark') {
