@@ -39,6 +39,12 @@
         }
         .control-btn:hover { transform: translateY(-2px); }
         .theme-btn { width: 40px; padding: 0; border-radius: 50%; font-size: 1.2rem; }
+        
+        /* 在线人数标签 */
+        .online-badge {
+            color: #10b981; background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3);
+            cursor: default;
+        }
 
         /* 注册/登录弹窗 */
         .modal-overlay {
@@ -87,10 +93,17 @@
         .welcome-box p { color: var(--text-sub); font-size: 1rem; margin-bottom: 5px; }
         .welcome-box .blessing { color: #d97706; font-weight: bold; font-size: 1.1rem; margin-top: 10px; display: inline-block; background: rgba(217, 119, 6, 0.1); padding: 4px 16px; border-radius: 20px; }
         .datetime-display { display: inline-block; background: var(--box-bg); color: var(--text-light); padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; font-family: monospace; margin-top: 15px; margin-bottom: 20px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
+        
+        /* 社交按钮 */
         .social-links { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
         .social-btn { display: inline-flex; align-items: center; justify-content: center; padding: 10px 15px; border-radius: 12px; text-decoration: none; font-size: 0.85rem; font-weight: bold; color: white; transition: all 0.2s; }
         .social-btn:hover { transform: translateY(-2px); opacity: 0.9; }
-        .social-xhs { background: #ff2442; } .social-bili { background: #00a1d6; } .social-wx { background: #f59e0b; }
+        .social-xhs { background: #ff2442; } 
+        .social-bili { background: #00a1d6; } 
+        .social-wx { background: #f59e0b; }
+        .social-douyin { background: #000000; }
+        .social-acfun { background: #ff5c00; } /* A站橙 */
+
         .milestone-link-btn { display: block; background: linear-gradient(90deg, #f59e0b, #ef4444); color: white; text-align: center; padding: 15px; border-radius: 16px; text-decoration: none; font-weight: bold; font-size: 1.05rem; margin-bottom: 25px; box-shadow: 0 6px 15px rgba(239, 68, 68, 0.2); transition: 0.3s; }
         .xiaohongshu-card { background: var(--card-bg); border: 2px dashed #fda4af; border-radius: 16px; padding: 20px; margin-bottom: 25px; }
         [data-theme="dark"] .xiaohongshu-card { border-color: #9f1239; }
@@ -98,9 +111,23 @@
         .xiaohongshu-card p { font-size: 0.9rem; color: var(--text-sub); margin-bottom: 10px; }
         .link-box { background: var(--box-bg); padding: 12px; border-radius: 8px; font-size: 0.85rem; color: var(--text-main); word-break: break-all; border: 1px solid var(--box-border); margin-bottom: 10px; user-select: all; }
         .expire-tip { font-size: 0.8rem; color: #be123c; background: rgba(225, 29, 72, 0.1); padding: 8px; border-radius: 6px; margin-bottom: 15px; }
+        
         .episode-links { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; border-top: 1px dashed #fda4af; padding-top: 15px; }
         .episode-btn { display: block; text-align: center; padding: 12px; border-radius: 8px; text-decoration: none; font-size: 0.9rem; font-weight: bold; transition: 0.2s; }
-        .btn-xhs { background: #ff2442; color: white; } .btn-bili { background: #00a1d6; color: white; }
+        .btn-xhs { background: #ff2442; color: white; } 
+        .btn-bili { background: #00a1d6; color: white; }
+        .btn-wx { background: #07c160; color: white; }
+        .btn-douyin { background: #000000; color: white; }
+        
+        /* 相关账号推荐卡片 */
+        .card-block { background: var(--card-bg); border-radius: 16px; padding: 20px; margin-bottom: 25px; box-shadow: var(--shadow); border: 1px solid var(--card-border); }
+        .card-title { font-size: 1rem; font-weight: bold; color: var(--text-sub); margin-bottom: 15px; display: flex; align-items: center; gap: 6px; }
+        .yt-link-item { display: block; background: var(--box-bg); border: 1px solid var(--box-border); padding: 12px 15px; border-radius: 10px; text-decoration: none; color: var(--text-main); margin-bottom: 10px; transition: all 0.2s; }
+        .yt-link-item:hover { background: var(--card-bg); border-color: #3b82f6; color: #3b82f6; }
+        .yt-name { font-weight: bold; font-size: 0.95rem; margin-bottom: 4px; }
+        .yt-url { font-size: 0.75rem; color: var(--text-light); word-break: break-all; }
+
+        /* 捐赠卡片 */
         .hero-donate { display: block; background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); border: 2px solid #fdba74; border-radius: 24px; padding: 30px 20px; text-align: center; text-decoration: none; margin-bottom: 25px; box-shadow: var(--shadow); transition: all 0.3s ease; }
         [data-theme="dark"] .hero-donate { background: linear-gradient(135deg, #431407 0%, #7c2d12 100%); border-color: #9a3412; }
         .hero-donate .heart-icon { font-size: 2.5rem; display: block; margin-bottom: 10px; }
@@ -109,12 +136,8 @@
         [data-theme="dark"] .hero-donate p { color: #fdba74; }
         .hero-donate .tag { display: inline-block; margin-top: 15px; background: rgba(0,0,0,0.05); padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; color: #c2410c; font-weight: bold; }
         [data-theme="dark"] .hero-donate .tag { background: rgba(255,255,255,0.1); color: #fdba74; }
-        .card-block { background: var(--card-bg); border-radius: 16px; padding: 20px; margin-bottom: 25px; box-shadow: var(--shadow); border: 1px solid var(--card-border); }
-        .card-title { font-size: 1rem; font-weight: bold; color: var(--text-sub); margin-bottom: 15px; display: flex; align-items: center; gap: 6px; }
-        .yt-link-item { display: block; background: var(--box-bg); border: 1px solid var(--box-border); padding: 12px 15px; border-radius: 10px; text-decoration: none; color: var(--text-main); margin-bottom: 10px; transition: all 0.2s; }
-        .yt-link-item:hover { background: var(--card-bg); border-color: #3b82f6; color: #3b82f6; }
-        .yt-name { font-weight: bold; font-size: 0.95rem; margin-bottom: 4px; }
-        .yt-url { font-size: 0.75rem; color: var(--text-light); word-break: break-all; }
+        
+        /* 账号小铺 */
         details.corner-shop { background: var(--card-bg); border-radius: 16px; box-shadow: var(--shadow); border: 1px solid var(--card-border); overflow: hidden; margin-bottom: 20px; }
         details.corner-shop summary { padding: 18px 20px; font-size: 1rem; font-weight: bold; color: var(--text-sub); cursor: pointer; list-style: none; display: flex; justify-content: space-between; }
         details.corner-shop summary::-webkit-details-marker { display: none; }
@@ -142,6 +165,7 @@
 
 <!-- 顶部控制区 -->
 <div class="top-controls">
+    <div class="control-btn online-badge" id="onlineCount">👀 在线: -- 人 (不是实时)</div>
     <div class="control-btn" id="authBtn" onclick="handleAuthClick()">登录 / 注册</div>
     <div class="control-btn theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</div>
 </div>
@@ -185,10 +209,13 @@
 
         <div class="datetime-display" id="clock">加载时间中...</div>
 
+        <!-- 社交按钮区 (新增AcFun) -->
         <div class="social-links">
             <a href="https://xhslink.cn/o/52CxhoNQFrZ" class="social-btn social-xhs" target="_blank">📕 小红书主页</a>
             <a href="https://b23.tv/qUYciok" class="social-btn social-bili" target="_blank">📺 Bilibili主页</a>
             <div class="social-btn social-wx" onclick="copyWxId()" style="cursor: pointer;">📱 视频号: sphed...</div>
+            <div class="social-btn social-douyin" onclick="copyDouyinId()" style="cursor: pointer;">🎵 抖音: dy17h5...</div>
+            <a href="https://m.acfun.cn/upPage/76378942?sid=d96dcc66fe0af918" class="social-btn social-acfun" target="_blank">📺 AcFun主页</a>
         </div>
     </div>
 
@@ -204,9 +231,16 @@
             💡 如果口令过期了，可在小红书搜索我的账号 <span style="color:#e11d48; font-weight:bold;">94147385890</span>，点击群聊找到“skibidi toilet 群”哦。
         </div>
 
+        <!-- 剧集链接按钮区 -->
         <div class="episode-links">
-            <a href="https://xhslink.cn/o/9b82gi2LMx5" class="episode-btn btn-xhs" target="_blank">📕 83集翻译 (小红书)</a>
-            <a href="https://b23.tv/GZu1Fxa" class="episode-btn btn-bili" target="_blank">📺 83集翻译 (Bilibili)</a>
+            <a href="https://xhslink.cn/o/9b82gi2LMx5" class="episode-btn btn-xhs" target="_blank">📕 83 part1 翻译 (小红书)</a>
+            <a href="https://b23.tv/GZu1Fxa" class="episode-btn btn-bili" target="_blank">📺 83 part1 翻译 (Bilibili)</a>
+            
+            <a href="https://xhslink.cn/o/6If92zQh7DV" class="episode-btn btn-xhs" target="_blank">📕 83 part2 翻译 (小红书)</a>
+            <a href="https://b23.tv/pbdClxU" class="episode-btn btn-bili" target="_blank">📺 83 part2 翻译 (Bilibili)</a>
+            <a href="https://weixin.qq.com/sph/AnDNfYeGmZ" class="episode-btn btn-wx" target="_blank">📱 83 part2 翻译-删减版 (视频号·可能会被下架)</a>
+            <a href="https://v.douyin.com/2foRMMYJQJw/" class="episode-btn btn-douyin" target="_blank">🎵 83 part2 翻译-删减版 (抖音·可能会被下架)</a>
+            
             <a href="https://www.xiaohongshu.com/collection/item/6a7e878c0608000000000001?xhsshare=&appuid=6707cdd5000000001d022219&apptime=1794144475&share_id=18a97ddeb4f74ae48929db556c7df34b&share_channel=copy_link" class="episode-btn btn-xhs" target="_blank">📕 XHS ST 剧集合集</a>
             <a href="https://www.xiaohongshu.com/collection/item/6af075611bbc000000000001?xhsshare=&appuid=6707cdd5000000001d022219&apptime=1794144537&share_id=41f7c35060374318aba0406eb9e584d7&share_channel=copy_link" class="episode-btn btn-xhs" target="_blank">📕 阿莱斯恶魔 (小红书)</a>
             <a href="https://b23.tv/HJpCkez" class="episode-btn btn-bili" target="_blank">📺 阿莱斯恶魔第二季 (Bilibili)</a>
@@ -216,14 +250,6 @@
 
     <!-- 里程碑跳转 -->
     <a href="milestones.html" class="milestone-link-btn">🏆 查看我的里程碑数据 (粉丝/播放量) ➔</a>
-
-    <!-- 捐赠卡片 -->
-    <a href="donate.html" class="hero-donate">
-        <span class="heart-icon">💖</span>
-        <h2>赞助与支持</h2>
-        <p>网站运营不易，如果您喜欢这里，欢迎请我喝杯奶茶（最高支持 3.88 元）。</p>
-        <span class="tag">全凭心意 · 感谢有您</span>
-    </a>
 
     <!-- 相关账号推荐 -->
     <div class="card-block">
@@ -242,9 +268,17 @@
         </a>
     </div>
 
-    <!-- 账号小铺 -->
+    <!-- 捐赠卡片 -->
+    <a href="donate.html" class="hero-donate">
+        <span class="heart-icon">💖</span>
+        <h2>赞助与支持</h2>
+        <p>网站运营不易，如果您喜欢这里，欢迎请我喝杯奶茶（最高支持 5.00 元）。</p>
+        <span class="tag">全凭心意 · 感谢有您</span>
+    </a>
+
+    <!-- 账号小铺 (已废弃) -->
     <details class="corner-shop">
-        <summary>🛒 账号小铺 (点击展开)</summary>
+        <summary>🛒 账号小铺 (已废弃)</summary>
         <div class="shop-content">
             <div class="mini-product">
                 <div class="mini-info"><div class="mini-icon bg-google">G</div><div><div class="mini-name">Google 账号</div><div class="stock-out">暂无库存</div></div></div>
@@ -281,19 +315,17 @@
 </div>
 
 <script>
-    // ================= 极简本地注册系统 (去除 ID 版) =================
+    // ================= 极简本地注册系统 =================
     const authBtn = document.getElementById('authBtn');
     const authModal = document.getElementById('authModal');
     const userGreeting = document.getElementById('userGreeting');
     const usernameInput = document.getElementById('usernameInput');
     const passwordInput = document.getElementById('passwordInput');
 
-    // 获取本地存的所有用户数据
     function getUsers() {
         return JSON.parse(localStorage.getItem('site_users_list') || '{}');
     }
 
-    // 检查登录状态
     function checkUser() {
         const currentUser = localStorage.getItem('current_user');
         if (currentUser) {
@@ -335,7 +367,6 @@
 
         const users = getUsers();
 
-        // 如果名字已存在，验证密码
         if (users[name]) {
             if (users[name].password === pass) {
                 localStorage.setItem('current_user', name);
@@ -346,12 +377,8 @@
                 alert("密码错误！");
             }
         } else {
-            // 如果名字不存在，直接注册
-            users[name] = {
-                password: pass
-            };
+            users[name] = { password: pass };
             localStorage.setItem('site_users_list', JSON.stringify(users));
-            
             localStorage.setItem('current_user', name);
             alert(`注册成功！欢迎你，${name}！`);
             closeModal();
@@ -360,6 +387,30 @@
     }
 
     checkUser();
+
+    // ================= 实时观看人数特效 =================
+    function updateOnlineCount() {
+        fetch('https://busuanzi.ibruce.info/busuanzi?jsonpCallback=cb')
+            .then(res => res.text())
+            .then(text => {
+                const match = text.match(/site_pv\":(\d+)/);
+                let pv = 150;
+                if (match && match[1]) { pv = parseInt(match[1]); }
+                
+                let baseOnline = Math.floor(pv * 0.01) + 5; 
+                let randomFluctuation = Math.floor(Math.random() * 10) + 1;
+                let finalOnline = baseOnline + randomFluctuation;
+                
+                document.getElementById('onlineCount').innerText = `👀 在线: ${finalOnline} 人 (不是实时)`;
+            })
+            .catch(() => {
+                let fakeOnline = Math.floor(Math.random() * 20) + 10;
+                document.getElementById('onlineCount').innerText = `👀 在线: ${fakeOnline} 人 (不是实时)`;
+            });
+    }
+
+    updateOnlineCount();
+    setInterval(updateOnlineCount, 30000);
 
     // ================= 其他页面功能 =================
     function updateClock() {
@@ -377,6 +428,7 @@
     updateClock();
     setInterval(updateClock, 1000);
 
+    // 复制视频号 ID
     function copyWxId() {
         const wxId = "sphedX45W2FbH1r";
         let tempInput = document.createElement("input");
@@ -386,6 +438,18 @@
         document.execCommand("copy");
         document.body.removeChild(tempInput);
         alert("微信视频号 ID 已复制：" + wxId + "\n请打开微信搜索并关注！");
+    }
+
+    // 复制抖音号
+    function copyDouyinId() {
+        const dyId = "dy17h5fglnu3y";
+        let tempInput = document.createElement("input");
+        tempInput.value = dyId;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempInput);
+        alert("抖音号已复制：" + dyId + "\n请打开抖音搜索并关注！");
     }
 
     const themeBtn = document.getElementById('themeBtn');
